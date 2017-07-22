@@ -5,7 +5,7 @@
     <p class="weekday">{{day}}</p>
     <ol class="todos">
         <li>
-            <input v-model="newTodo" placeholder=" 还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="canadd"></input>
+            <input v-model="newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="canadd"></input>
         </li>
         <li v-for="todo in todoList" class="list">
             <div>

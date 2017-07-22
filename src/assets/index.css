@@ -58,6 +58,15 @@ body #app .calendar .monthday div {
   width: 40px;
   height: 40px;
 }
+body #app .calendar .monthday .past {
+  color: #ddd;
+}
+body #app .calendar .monthday .now {
+  border: 1px solid #ff6565;
+  border-radius: 50%;
+  background: #ff6565;
+  color: white;
+}
 body #app .todo {
   width: 425px;
   height: 550px;
@@ -91,14 +100,12 @@ body #app .todo .todos .newtodo {
   padding-top: 20px;
   background: #ff6565;
   border: none;
-  border-bottom: 1px solid white;
   color: white;
   outline: none;
   width: 280px;
 }
 body #app .todo .todos .newtodo::-webkit-input-placeholder {
   color: whitesmoke;
-  text-align: center;
 }
 body #app .todo .todos .list {
   padding-top: 20px;

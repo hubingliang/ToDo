@@ -12,7 +12,7 @@
             <div class="weekend">su</div>
         </div>
         <div class="monthday">
-            <div v-for="dates in dates">
+            <div v-for="dates in dates" v-bind:class="{past:dates.past === true,now:dates.now === true}">
                 {{ dates.date }}
             </div>
         </div>
@@ -36,7 +36,10 @@ export default {
     methods:{
         whichDay: function(){ 
             let date = new Date()
-            let weekday = date.getDay()
+            let month = date.getMonth()
+            let year = date.getFullYear()
+            let nowdate = new Date(year,month,1)
+            let weekday = nowdate.getDay()
             for(let i = 1;i < weekday;i++){
                 this.dates.unshift({date:'  '})
             }
@@ -49,14 +52,20 @@ export default {
             let lastdate = new Date(year,month,0)
             let days = lastdate.getDate()
             let day = 1
-            console.log(nowday)
             for(let i = 1;i < days;i++){
-                if(day<10){
+                if(day < 10){
                     day = '0'+day
                 }
-                if(day <= nowday)
-                this.dates.push({date: `${day}`})
-                day++
+                if(day < nowday){
+                    this.dates.push({date: `${day}`,past:true})
+                    day++
+                }else if(day === nowday){
+                    this.dates.push({date: `${day}`,now:true})
+                    day++
+                }else{
+                    this.dates.push({date: `${day}`,past:false})
+                    day++
+                }
             }
         }
     }
