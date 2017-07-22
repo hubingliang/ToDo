@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body #app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f1f1f1;
+}
+body #app .calendar {
+  width: 375px;
+  height: 475px;
+  padding: 10px;
+  display: flex;
+  box-shadow: 0 45px 200px -50px #ddd;
+  background: white;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+}
+body #app .calendar .month {
+  margin-top: 60px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+body #app .calendar .el-icon-arrow-left {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+body #app .calendar .weekday {
+  display: flex;
+  justify-content: center;
+  width: 280px;
+}
+body #app .calendar .weekday div {
+  padding: 10px;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+body #app .calendar .weekday .weekend {
+  color: #ff6565;
+  padding: 10px;
+  text-align: center;
+}
+body #app .calendar .monthday {
+  display: flex;
+  flex-wrap: wrap;
+  width: 280px;
+}
+body #app .calendar .monthday div {
+  padding: 10px;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+}
+body #app .todo {
+  width: 425px;
+  height: 550px;
+  background: #ff6565;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 40px 200px -50px #ff6565;
+}
+body #app .todo .el-icon-plus {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  color: white;
+}
+body #app .todo .day {
+  font-size: 100px;
+  color: white;
+  font-weight: 100;
+  margin-top: 60px;
+}
+body #app .todo .weekday {
+  color: white;
+}
+body #app .todo .todos {
+  color: white;
+}
+body #app .todo .todos .newtodo {
+  padding-top: 20px;
+  background: #ff6565;
+  border: none;
+  border-bottom: 1px solid white;
+  color: white;
+  outline: none;
+  width: 280px;
+}
+body #app .todo .todos .newtodo::-webkit-input-placeholder {
+  color: whitesmoke;
+  text-align: center;
+}
+body #app .todo .todos .list {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 280px;
+}
+body #app .todo .todos .list span {
+  margin-left: 2px;
+}
+body #app .todo .todos .list .active {
+  text-decoration: line-through;
+  color: #ffb2b2;
+}

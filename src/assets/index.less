@@ -1,0 +1,119 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    #app{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: rgb(241, 241, 241);
+        .calendar{
+            width: 375px;
+            height: 475px;
+            padding: 10px;
+            display: flex;
+            box-shadow: 0 45px 200px -50px #ddd;
+            background: white;
+            position: relative;
+            flex-direction: column;
+            align-items: center;
+            .month{
+                margin-top: 60px;
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            .el-icon-arrow-left{
+                position: absolute;
+                left: 20px;
+                top: 20px;
+            }
+            .weekday{
+                display: flex;
+                justify-content: center;
+                width: 280px;
+                div{
+                    padding: 10px;
+                    text-align: center;
+                    width: 40px;
+                    height: 40px;
+                }
+                .weekend{
+                    color: rgb(255, 101, 101);
+                    padding: 10px;
+                    text-align: center;
+                }
+            }
+            .monthday{
+                display: flex;
+                flex-wrap: wrap;
+                width: 280px;
+                div{
+                    padding: 10px;
+                    text-align: center;
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        }
+        .todo{
+            width: 425px;
+            height: 550px;
+            background: rgb(255, 101, 101);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 40px 200px -50px rgb(255, 101, 101);
+            .el-icon-plus{
+                position: absolute;
+                right: 30px;
+                top: 30px;
+                color: white;
+            }
+            .day{
+                font-size: 100px;
+                color: white;
+                font-weight: 100;
+                margin-top: 60px;
+            }
+            .weekday{
+                color: white;
+            }
+            .todos{
+                color: white;
+                .newtodo{
+                    padding-top: 20px;
+                    background: rgb(255, 101, 101);
+                    border: none;
+                    border-bottom: 1px solid white;
+                    color: white;
+                    outline: none;
+                    width: 280px;
+                }
+                .newtodo::-webkit-input-placeholder{
+                        color: whitesmoke;
+                        text-align:center;
+                }
+                .list{
+                    padding-top: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    width: 280px;
+                    .el-icon-delete{
+                    }
+                    span{
+                        margin-left: 2px;
+                    }
+                    .active{
+                        text-decoration: line-through;
+                        color: rgb(255, 178, 178);
+                    }
+                }
+            }
+        }
+    }
+}

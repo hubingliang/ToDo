@@ -1,28 +1,32 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <hello></hello>
-  </div>
+    <div id="app">
+      <calendar />
+
+      <todos />
+    </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
-
+import todos from './components/todos'
+import calendar from './components/calendar'
 export default {
+  data(){
+    return {
+      date:{
+
+      }
+    }
+  },
   name: 'app',
   components: {
-    Hello
-  }
+    todos,calendar
+  },
 }
+
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
 }
 </style>
