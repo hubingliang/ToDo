@@ -31,8 +31,9 @@ export default {
             let date = new Date()
             let month = date.getMonth()
             let year = date.getFullYear()
-            this.todo.Tmonth = this.todo.dates[index].date
-            this.todo.day = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(year,month,this.todo.dates[index].date).getDay()]
+            this.todo.day = this.todo.dates[index].date
+            this.todo.weekday = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(year,month,this.todo.dates[index].date).getDay()]
+            this.todo.index = this.todo.day - 1 + this.todo.empty
             this.todo.todolist = this.todo.dates[this.todo.index].todolist
         },
         whichDay: function(){ 
@@ -45,6 +46,7 @@ export default {
                 this.todo.dates.unshift({date:'  '})
             }
             this.todo.empty = weekday - 1
+            this.todo.index = this.todo.day - 1 + this.todo.empty
         },
         monthdays: function(){
             let date = new Date()

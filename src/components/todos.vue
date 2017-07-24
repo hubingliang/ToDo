@@ -1,11 +1,11 @@
 <template>
 <div class="todo">
     <i class="el-icon-plus" v-on:click="add"></i>
-    <p class="day">{{todo.Tmonth}}</p>
-    <p class="weekday">{{todo.day}}</p>
+    <p class="day">{{todo.day}}</p>
+    <p class="weekday">{{todo.weekday}}</p>
     <ol class="todos">
         <li>
-            <input v-model="newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="canadd"></input>
+            <input v-model="todo.newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="todo.canadd"></input>
         </li>
         <li v-for="todo in todo.todolist" class="list">
             <div>
@@ -21,14 +21,6 @@
 <script>
     export default {
         props:['todo'],
-        data() {
-            return {
-                newTodo: '',
-                canadd: false,
-                month : new Date().getDate(),
-                day: new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date().getDay()]
-            }
-        },
         created: function(){
             // onbeforeunload文档：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/onbeforeunload
             window.onbeforeunload = ()=>{
@@ -42,27 +34,23 @@
         },
         methods: {
             addTodo: function(){
-                this.todo.index = this.todo.Tmonth - 1 + this.todo.empty
+                console.log(this.todo.index)
+                console.log(this.todo.dates[this.todo.index])
                 this.todo.dates[this.todo.index].todolist.push({
                     date: this.todo.day,
-                    title: this.newTodo,
+                    title: this.todo.newTodo,
                     createdAt: new Date(),
                     done: false
                 })
-                this.newTodo = ''
-                this.todo.todolist = this.todo.dates[this.todo.index].todolist
+                this.todo.newTodo = ''
             },
             removeTodo: function(todo){
-                let index = this.todo.dates[this.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
+                console.log('s')
+                let index = this.todo.dates[this.todo.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
                 this.todo.dates[this.todo.index].todolist.splice(index,1) // 不懂 splice？赶紧看 MDN 文档！
             },
             add: function(){
-                this.canadd = !this.canadd
-            },
-            getday: function(){
-                let a = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");  
-                let week = new Date().getDay();  
-                let str = a[week];  
+                this.todo.canadd = !this.todo.canadd
             },
         }
     }
