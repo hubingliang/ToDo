@@ -56,16 +56,42 @@ body #app .calendar .monthday div {
   padding: 10px;
   text-align: center;
   width: 40px;
-  height: 40px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+body #app .calendar .monthday div .circular {
+  width: 5px;
+  height: 5px;
+  padding: 0;
+  border: 1px solid #ff6565;
+  border-radius: 50%;
+  background: #ff6565;
+  color: #ff6565;
 }
 body #app .calendar .monthday .past {
   color: #ddd;
 }
+body #app .calendar .monthday .past .circular {
+  width: 5px;
+  height: 5px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #ddd;
+}
 body #app .calendar .monthday .now {
+  width: 40px;
+  height: 40px;
   border: 1px solid #ff6565;
   border-radius: 50%;
   background: #ff6565;
   color: white;
+}
+body #app .calendar .monthday .now .circular {
+  display: none;
 }
 body #app .todo {
   width: 425px;

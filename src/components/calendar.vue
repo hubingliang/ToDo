@@ -13,7 +13,8 @@
         </div>
         <div class="monthday">
             <div v-for="(dates,index) in todo.dates" v-bind:class="{past:dates.past === true,now:dates.now === true}" v-on:click="changeday(index)" ref="menuItem">
-                {{ dates.date }}
+                <p>{{ dates.date }}</p>
+                <div class="circular" v-if="dates.finish"></div>
             </div>
         </div>
     </div>
@@ -61,13 +62,13 @@ export default {
                     day = '0' + day
                 }
                 if(day < nowday){
-                    this.todo.dates.push({date: `${day}`,past:true,todolist:[]})
+                    this.todo.dates.push({date: `${day}`,past:true,todolist:[],finish:false})
                     day++
                 }else if(day === nowday){
-                    this.todo.dates.push({date: `${day}`,now:true,todolist:[]})
+                    this.todo.dates.push({date: `${day}`,now:true,todolist:[],finish:false})
                     day++
                 }else{
-                    this.todo.dates.push({date: `${day}`,past:false,todolist:[]})
+                    this.todo.dates.push({date: `${day}`,past:false,todolist:[],finish:false})
                     day++
                 }
             }
