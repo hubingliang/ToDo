@@ -94,7 +94,11 @@ body #app .todo .weekday {
   color: white;
 }
 body #app .todo .todos {
+  margin-top: 30px;
   color: white;
+  height: 255px;
+  overflow: auto;
+  overflow-y: visible;
 }
 body #app .todo .todos .newtodo {
   padding-top: 20px;
@@ -102,7 +106,7 @@ body #app .todo .todos .newtodo {
   border: none;
   color: white;
   outline: none;
-  width: 280px;
+  width: 320px;
 }
 body #app .todo .todos .newtodo::-webkit-input-placeholder {
   color: whitesmoke;
@@ -111,12 +115,18 @@ body #app .todo .todos .list {
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
-  width: 280px;
+  width: 320px;
 }
-body #app .todo .todos .list span {
-  margin-left: 2px;
+body #app .todo .todos .list .todolist {
+  display: flex;
 }
-body #app .todo .todos .list .active {
+body #app .todo .todos .list .todolist p {
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+}
+body #app .todo .todos .list .todolist .active {
   text-decoration: line-through;
   color: #ffb2b2;
 }

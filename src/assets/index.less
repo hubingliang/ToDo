@@ -93,14 +93,18 @@ body{
                 color: white;
             }
             .todos{
+                margin-top: 30px;
                 color: white;
+                height: 255px;
+                overflow: auto;
+                overflow-y:visible;
                 .newtodo{
                     padding-top: 20px;
                     background: rgb(255, 101, 101);
                     border: none;
                     color: white;
                     outline: none;
-                    width: 280px;
+                    width: 320px;
                 }
                 .newtodo::-webkit-input-placeholder{
                         color: whitesmoke;
@@ -109,15 +113,19 @@ body{
                     padding-top: 20px;
                     display: flex;
                     justify-content: space-between;
-                    width: 280px;
-                    .el-icon-delete{
-                    }
-                    span{
-                        margin-left: 2px;
-                    }
-                    .active{
-                        text-decoration: line-through;
-                        color: rgb(255, 178, 178);
+                    width: 320px;
+                    .todolist{
+                        display: flex;
+                        p{
+                            margin-left: 10px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            width: 250px;
+                        }
+                        .active{
+                            text-decoration: line-through;
+                            color: rgb(255, 178, 178);
+                        }
                     }
                 }
             }

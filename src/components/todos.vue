@@ -1,13 +1,13 @@
 <template>
 <div class="todo">
     <i class="el-icon-plus" v-on:click="add"></i>
-    <p class="day">{{month}}</p>
-    <p class="weekday">{{day}}</p>
+    <p class="day">{{todo.Tmonth}}</p>
+    <p class="weekday">{{todo.day}}</p>
     <ol class="todos">
         <li>
             <input v-model="newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="canadd"></input>
         </li>
-        <li v-for="todo in todoList" class="list">
+        <li v-for="todo in todo.todolist" class="list">
             <div>
                 <el-checkbox v-model="todo.done"></el-checkbox>
                 <span v-bind:class="{active:todo.done === true}">{{ todo.title }}</span>
@@ -20,10 +20,10 @@
 
 <script>
     export default {
+        props:['todo'],
         data() {
             return {
                 newTodo: '',
-                todoList: [],
                 canadd: false,
                 month : new Date().getDate(),
                 day: new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date().getDay()]
@@ -42,16 +42,19 @@
         },
         methods: {
             addTodo: function(){
-                this.todoList.push({
+                this.todo.index = this.todo.Tmonth - 1 + this.todo.empty
+                this.todo.dates[this.todo.index].todolist.push({
+                    date: this.todo.day,
                     title: this.newTodo,
                     createdAt: new Date(),
                     done: false
                 })
                 this.newTodo = ''
+                this.todo.todolist = this.todo.dates[this.todo.index].todolist
             },
             removeTodo: function(todo){
-                let index = this.todoList.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
-                this.todoList.splice(index,1) // 不懂 splice？赶紧看 MDN 文档！
+                let index = this.todo.dates[this.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
+                this.todo.dates[this.todo.index].todolist.splice(index,1) // 不懂 splice？赶紧看 MDN 文档！
             },
             add: function(){
                 this.canadd = !this.canadd
