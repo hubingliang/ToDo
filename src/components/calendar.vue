@@ -57,7 +57,8 @@ export default {
             let lastdate = new Date(year,month,0)
             let days = lastdate.getDate()
             let day = 1
-            for(let i = 1;i < days;i++){
+            console.log(days)
+            for(let i = 1;i <= days;i++){
                 if(day < 10){
                     day = '0' + day
                 }
