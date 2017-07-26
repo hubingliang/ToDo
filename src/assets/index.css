@@ -96,37 +96,104 @@ body #app .calendar .monthday .now .circular {
 body #app .todo {
   width: 425px;
   height: 550px;
-  background: #ff6565;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   position: relative;
+  overflow: hidden;
+  background: #ff6565;
   box-shadow: 0 40px 200px -50px #ff6565;
 }
-body #app .todo .el-icon-plus {
+body #app .todo .login {
+  width: 425px;
+  height: 550px;
+  position: relative;
+}
+body #app .todo .login img {
+  width: 425px;
+  margin-bottom: 20px;
+}
+body #app .todo .login .el-register {
+  position: absolute;
+  top: 320px;
+  left: 90px;
+  transform: rotateZ(-12deg);
+}
+body #app .todo .login .el-signIn {
+  position: absolute;
+  top: 285px;
+  left: 230px;
+  transform: rotateZ(-12deg);
+}
+body #app .todo .login p {
+  color: white;
+  font-size: 24px;
+  margin-left: 25px;
+}
+body #app .todo .register {
+  width: 425px;
+  height: 550px;
+  position: relative;
+  padding: 30px;
+  color: white;
+}
+body #app .todo .register h4 {
+  font-size: 35px;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+body #app .todo .register p {
+  font-size: 25px;
+}
+body #app .todo .register form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+body #app .todo .register form input {
+  border: none;
+  margin-top: 30px;
+  list-style: none;
+  outline: none;
+  background: #ff6565;
+  color: white;
+}
+body #app .todo .register form input::-webkit-input-placeholder {
+  color: whitesmoke;
+}
+body #app .todo .register form .el-register {
+  margin-top: 60px;
+}
+body #app .todo .register form .el-signin {
+  margin-top: 100px;
+}
+body #app .todo .todo {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+}
+body #app .todo .todo .el-icon-plus {
   position: absolute;
   right: 30px;
   top: 30px;
   color: white;
 }
-body #app .todo .day {
+body #app .todo .todo .day {
   font-size: 100px;
   color: white;
   font-weight: 100;
   margin-top: 60px;
 }
-body #app .todo .weekday {
+body #app .todo .todo .weekday {
   color: white;
 }
-body #app .todo .todos {
+body #app .todo .todo .todos {
   margin-top: 30px;
   color: white;
   height: 255px;
   overflow: auto;
   overflow-y: visible;
 }
-body #app .todo .todos .newtodo {
+body #app .todo .todo .todos .newtodo {
   padding-top: 20px;
   background: #ff6565;
   border: none;
@@ -134,25 +201,25 @@ body #app .todo .todos .newtodo {
   outline: none;
   width: 320px;
 }
-body #app .todo .todos .newtodo::-webkit-input-placeholder {
+body #app .todo .todo .todos .newtodo::-webkit-input-placeholder {
   color: whitesmoke;
 }
-body #app .todo .todos .list {
+body #app .todo .todo .todos .list {
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
   width: 320px;
 }
-body #app .todo .todos .list .todolist {
+body #app .todo .todo .todos .list .todolist {
   display: flex;
 }
-body #app .todo .todos .list .todolist p {
+body #app .todo .todo .todos .list .todolist p {
   margin-left: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 250px;
 }
-body #app .todo .todos .list .todolist .active {
+body #app .todo .todo .todos .list .todolist .active {
   text-decoration: line-through;
   color: #ffb2b2;
 }

@@ -25,52 +25,9 @@ export default {
         }
       }
   },
-  mounted() {
-      this.x()
-  },
   name: 'app',
   components: {
     todos,calendar
-  },
-  methods:{
-    x:function(){
-      var APP_ID = 'iq8VG5dIWuxuOwbw9XGV9aCK-gzGzoHsz';
-      var APP_KEY = 'RK4buVBs7Q2rxhgE29gVKU66';
-
-      AV.init({
-        appId: APP_ID,
-        appKey: APP_KEY
-      });
-    },
-    register:function(){
-      var username = $('#inputUsername').val();
-      var password = $('#inputPassword').val();
-      var email = $('inputEmail').val();
-
-      // LeanCloud - 注册
-      // https://leancloud.cn/docs/leanstorage_guide-js.html#注册
-      var user = new AV.User();
-      user.setUsername(username);
-      user.setPassword(password);
-      user.setEmail(email);
-      user.signUp().then(function (loginedUser) {
-        // 注册成功，跳转到商品 list 页面
-      }, (function (error) {
-          alert(JSON.stringify(error));
-      }));
-    },
-    login:function(){
-      var username = $('#inputUsername').val();
-      var password = $('#inputPassword').val();
-
-      // LeanCloud - 登录
-      // https://leancloud.cn/docs/leanstorage_guide-js.html#用户名和密码登录
-      AV.User.logIn(username, password).then(function (loginedUser) {
-        // 登录成功，跳转到商品 list 页面
-      }, function (error) {
-        alert(JSON.stringify(error));
-      });
-    }
   }
 }
 

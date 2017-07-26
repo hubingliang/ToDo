@@ -97,61 +97,129 @@ body{
         .todo{
             width: 425px;
             height: 550px;
-            background: rgb(255, 101, 101);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             position: relative;
+            overflow: hidden;
+            background: rgb(255, 101, 101);
             box-shadow: 0 40px 200px -50px rgb(255, 101, 101);
-            .el-icon-plus{
-                position: absolute;
-                right: 30px;
-                top: 30px;
-                color: white;
-            }
-            .day{
-                font-size: 100px;
-                color: white;
-                font-weight: 100;
-                margin-top: 60px;
-            }
-            .weekday{
-                color: white;
-            }
-            .todos{
-                margin-top: 30px;
-                color: white;
-                height: 255px;
-                overflow: auto;
-                overflow-y:visible;
-                .newtodo{
-                    padding-top: 20px;
-                    background: rgb(255, 101, 101);
-                    border: none;
+            .login{
+                width: 425px;
+                height: 550px;
+                position: relative;
+                img{
+                    width: 425px;
+                    margin-bottom: 20px;
+                }
+                .el-register{
+                    position: absolute;
+                    top: 320px;
+                    left: 90px;
+                    transform: rotateZ(-12deg);
+                }
+                .el-signIn{
+                    position: absolute;
+                    top: 285px;
+                    left: 230px;
+                    transform: rotateZ(-12deg);
+                }
+                p{
                     color: white;
-                    outline: none;
-                    width: 320px;
+                    font-size: 24px;
+                    margin-left: 25px;
                 }
-                .newtodo::-webkit-input-placeholder{
-                        color: whitesmoke;
+            }
+            .register{
+                width: 425px;
+                height: 550px;
+                position: relative;
+                padding: 30px;
+                color: white;
+                h4{
+                    font-size: 35px;
+                    margin-top: 40px;
+                    margin-bottom: 20px;
                 }
-                .list{
-                    padding-top: 20px;
+                p{
+                    font-size: 25px;
+                }
+                form{
                     display: flex;
-                    justify-content: space-between;
-                    width: 320px;
-                    .todolist{
+                    flex-direction: column;
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+                    input{
+                        border: none;
+                        margin-top: 30px;
+                        list-style: none;
+                        outline: none;
+                        background: rgb(255, 101, 101);
+                        color: white;
+                    }
+                    
+                    input::-webkit-input-placeholder{
+                            color: whitesmoke;
+                    }
+                    .el-register{
+                        margin-top: 60px;
+                    }
+                    .el-signin{
+                        margin-top: 100px
+                    }
+                }
+            }
+            .todo{
+                display: flex;
+                position: relative;
+                flex-direction: column;
+                align-items: center;
+                .el-icon-plus{
+                    position: absolute;
+                    right: 30px;
+                    top: 30px;
+                    color: white;
+                }
+                .day{
+                    font-size: 100px;
+                    color: white;
+                    font-weight: 100;
+                    margin-top: 60px;
+                }
+                .weekday{
+                    color: white;
+                }
+                .todos{
+                    margin-top: 30px;
+                    color: white;
+                    height: 255px;
+                    overflow: auto;
+                    overflow-y:visible;
+                    .newtodo{
+                        padding-top: 20px;
+                        background: rgb(255, 101, 101);
+                        border: none;
+                        color: white;
+                        outline: none;
+                        width: 320px;
+                    }
+                    .newtodo::-webkit-input-placeholder{
+                            color: whitesmoke;
+                    }
+                    .list{
+                        padding-top: 20px;
                         display: flex;
-                        p{
-                            margin-left: 10px;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            width: 250px;
-                        }
-                        .active{
-                            text-decoration: line-through;
-                            color: rgb(255, 178, 178);
+                        justify-content: space-between;
+                        width: 320px;
+                        .todolist{
+                            display: flex;
+                            p{
+                                margin-left: 10px;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                width: 250px;
+                            }
+                            .active{
+                                text-decoration: line-through;
+                                color: rgb(255, 178, 178);
+                            }
                         }
                     }
                 }
