@@ -18,7 +18,7 @@
                     <input type="text"placeholder="Username"id="registerUsername">
                     <input type="password"placeholder="password"id="registerPassword">
                     <input type="text"placeholder="email"id="registerEmail">
-                    <el-button class="el-register"v-on:click="login()">register</el-button>
+                    <el-button class="el-register"v-on:click="register()">register</el-button>
                 </form>
 
             </div>
@@ -104,9 +104,11 @@
                     var username = $('#registerUsername').val();
                     var password = $('#registerPassword').val();
                     var email = $('#registerEmail').val();
+                    console.log(username)
+                    console.log(password)
+                    console.log(email)
                     // LeanCloud - 注册
                     // https://leancloud.cn/docs/leanstorage_guide-js.html#注册
-                    console.log('ss')
                     var user = new AV.User();
                     user.setUsername(username);
                     user.setPassword(password);
@@ -124,7 +126,7 @@
                     // LeanCloud - 登录
                     // https://leancloud.cn/docs/leanstorage_guide-js.html#用户名和密码登录
                     AV.User.logIn(username, password).then(function (loginedUser) {
-                        // 登录成功，跳转到商品 list 页面
+                        alert(`Hello ${username}`)
                     }, function (error) {
                         alert(JSON.stringify(error));
                     });
