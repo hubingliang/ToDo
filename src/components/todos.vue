@@ -5,8 +5,8 @@
                     <img src="../assets/todolist.jpg" alt="">
                     <el-button class="el-register"  @click="loginshow = !loginshow,signInshow = !signInshow">登 录</el-button>
                     <el-button class="el-signIn" @click="loginshow = !loginshow,registershow = !registershow">注 册</el-button>
-                    <p>Easiest way to </p>
-                    <p>be to plan every day</p>
+                    <p>Easiest way</p>
+                    <p>to plan every day</p>
                 </div>
             </transition>
             <div class="register" v-show="registershow">
@@ -18,9 +18,8 @@
                     <input type="text"placeholder="Username"id="registerUsername">
                     <input type="password"placeholder="password"id="registerPassword">
                     <input type="text"placeholder="email"id="registerEmail">
-                    <el-button class="el-register"v-on:click="register()">register</el-button>
+                    <el-button class="el-register"v-on:click="register()" @click="registershow = !registershow,signInshow = !signInshow">register</el-button>
                 </form>
-
             </div>
             <div class="register" v-show="signInshow">
                 <i class="el-icon-arrow-left" @click="loginshow = !loginshow,signInshow = !signInshow"></i>
@@ -30,11 +29,11 @@
                 <form action="" class="register-form">
                     <input type="text"placeholder="Username"id="signinEmail">
                     <input type="password"placeholder="password"id="signinPassword">
-                    <el-button class="el-signin" v-on:click="login()">sign in</el-button>
+                    <el-button class="el-signin" v-on:click="login()"  @click="signInshow = !signInshow,todoshow = !todoshow">sign in</el-button>
                 </form>
             </div>
             <transition name="el-fade-in">
-            <div class="todo" v-show="registershow">
+            <div class="todo" v-show="todoshow">
                 <i class="el-icon-plus" v-on:click="add"></i>
                 <p class="day">{{todo.day}}</p>
                 <p class="weekday">{{todo.weekday}}</p>
@@ -61,7 +60,7 @@
                 loginshow: true,
                 registershow: false,
                 signInshow: false,
-
+                todoshow: false,
             }),
             mounted() {
                 this.AV()
@@ -104,9 +103,6 @@
                     var username = $('#registerUsername').val();
                     var password = $('#registerPassword').val();
                     var email = $('#registerEmail').val();
-                    console.log(username)
-                    console.log(password)
-                    console.log(email)
                     // LeanCloud - 注册
                     // https://leancloud.cn/docs/leanstorage_guide-js.html#注册
                     var user = new AV.User();
@@ -122,13 +118,16 @@
                 login:function(){
                     var username = $('#signinEmail').val();
                     var password = $('#signinPassword').val();
-
                     // LeanCloud - 登录
                     // https://leancloud.cn/docs/leanstorage_guide-js.html#用户名和密码登录
                     AV.User.logIn(username, password).then(function (loginedUser) {
                         alert(`Hello ${username}`)
                     }, function (error) {
-                        alert(JSON.stringify(error));
+                        if (error.code === 210) {
+                            alert('用户名密码不匹配')
+                        } else if (error.code === 211) {
+                            alert('用户名不存在')
+                        }
                     });
                 },
                 AV:function(){
