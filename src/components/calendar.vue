@@ -57,11 +57,7 @@ export default {
             let lastdate = new Date(year,month,0)
             let days = lastdate.getDate()
             let day = 1
-            console.log(days)
             for(let i = 1;i <= days;i++){
-                if(day < 10){
-                    day = '0' + day
-                }
                 if(day < nowday){
                     this.todo.dates.push({date: `${day}`,past:true,todolist:[],finish:false})
                     day++
