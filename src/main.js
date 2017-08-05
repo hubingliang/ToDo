@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-default/index.css'
 import './assets/reset.css'
 import './assets/index.css'
 import App from './App'
+import AV from 'leancloud-storage'
 
 Vue.use(ElementUI)
 
