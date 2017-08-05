@@ -1,12 +1,13 @@
 <template>
     <div id="app">
+      <background />
       <calendar v-bind:todo="todo"/>
-
       <todos v-bind:todo="todo"/>
     </div>
 </template>
 
 <script>
+import background from './components/background'
 import todos from './components/todos'
 import calendar from './components/calendar'
 export default {
@@ -27,14 +28,11 @@ export default {
   },
   name: 'app',
   components: {
-    todos,calendar
+    todos,calendar,background
   }
 }
 
 </script>
 
 <style>
-#app {
-
-}
 </style>
