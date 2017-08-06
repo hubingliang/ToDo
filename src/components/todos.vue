@@ -63,20 +63,12 @@
                 todoshow: false,
             }),
             mounted() {
+                this.read()
+            },
+            created: function(){
                 this.AV()
             },
             props:['todo'],
-            created: function(){
-                // onbeforeunload文档：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/onbeforeunload
-                window.onbeforeunload = ()=>{
-                let dataString = JSON.stringify(this.todoList) // JSON 文档: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON
-                window.localStorage.setItem('myTodos', dataString) // 看文档https://developer.mozilla.org/zh-CN/docs/Web/API/Window/localStorage
-                }
-
-                let oldDataString = window.localStorage.getItem('myTodos')
-                let oldData = JSON.parse(oldDataString)
-                this.todoList = oldData || []
-            },
             methods: {
                 addTodo: function(){
                     this.todo.dates[this.todo.index].todolist.push({
@@ -88,6 +80,7 @@
                     this.todo.newTodo = ''
                     this.todo.todolist = this.todo.dates[this.todo.index].todolist
                     this.todo.dates[this.todo.index].finish = true
+                    this.saveTodos()
                 },
                 removeTodo: function(todo){
                     let index = this.todo.dates[this.todo.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
@@ -95,6 +88,7 @@
                     if(this.todo.todolist.length === 0){
                         this.todo.dates[this.todo.index].finish = false
                     }
+                    this.saveTodos()
                 },
                 add: function(){
                     this.todo.canadd = !this.todo.canadd
@@ -130,6 +124,10 @@
                         }
                     });
                 },
+                getCurrentUser: function () {
+                    let {id, createdAt, attributes: {username}} = AV.User.current()
+                    return {id, username, createdAt}
+                },
                 AV:function(){
                     var APP_ID = 'iq8VG5dIWuxuOwbw9XGV9aCK-gzGzoHsz';
                     var APP_KEY = 'RK4buVBs7Q2rxhgE29gVKU66';
@@ -138,6 +136,50 @@
                         appKey: APP_KEY
                     });
                 },
+                saveTodos:function(){
+                    let dataString = JSON.stringify(this.todo.dates[this.todo.index].todolist)
+                    var AVTodos = AV.Object.extend('AllTodos')
+                    var avTodos = new AVTodos()
+                    var acl = new AV.ACL()
+                    acl.setReadAccess(AV.User.current(),true)
+                    acl.setWriteAccess(AV.User.current(),true)
+                    avTodos.set('content', dataString)
+                    avTodos.setACL(acl)
+                    avTodos.save().then(function (todo) {
+                        alert('保存成功')
+                    }, function (error) {
+                        alert('保存失败')
+                    });
+                },
+                read:function(){
+                    this.currentUser = this.getCurrentUser()
+                    let empty = this.todo.empty
+                    if(this.currentUser){
+                    var query = new AV.Query('AllTodos');
+                    query.find().then((todos)=> {
+                            let i = 0
+                            for(i;i<todos.length;i++){
+                                let ii = 0
+                                var todo = JSON.parse(todos[i].attributes.content)
+                                for(ii;ii<todo.length;ii++){
+                                    var date = todo[ii].date
+                                    console.log(this.todo.dates[date+empty-1].todolist);
+                                    
+                                    let todolist = this.todo.dates[date+empty-1].todolist
+                                    todolist.push({
+                                        date: todo[ii].date,
+                                        title: todo[ii].title,
+                                        done: todo[ii].done,
+                                    })
+                                }
+                            }
+                            let nowday = new Date().getDate()
+                            this.todo.todolist = this.todo.dates[nowday+empty-1].todolist
+                        }, function(error){
+                            console.error(error) 
+                        })
+                    }
+                }
             }
         }
     </script>

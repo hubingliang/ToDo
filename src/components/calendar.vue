@@ -69,7 +69,7 @@ export default {
                     day++
                 }
             }
-        }
+        },
     }
 }
 </script>
