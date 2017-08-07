@@ -3,8 +3,8 @@
             <transition name="el-fade-in-linear">
                 <div class="login" v-show="loginshow">
                     <img src="../assets/todolist.jpg" alt="">
-                    <el-button class="el-register"  @click="loginshow = !loginshow,signInshow = !signInshow">登 录</el-button>
-                    <el-button class="el-signIn" @click="loginshow = !loginshow,registershow = !registershow">注 册</el-button>
+                    <el-button type="text" class="el-register"  @click="loginshow = !loginshow,signInshow = !signInshow">登 录</el-button>
+                    <el-button type="text" class="el-signIn" @click="loginshow = !loginshow,registershow = !registershow">注 册</el-button>
                     <p>Easiest way</p>
                     <p>to plan every day</p>
                 </div>
@@ -144,6 +144,7 @@
                     acl.setReadAccess(AV.User.current(),true)
                     acl.setWriteAccess(AV.User.current(),true)
                     avTodos.set('content', dataString)
+                    avTodos.set('username', AV.User.current().attributes.username)
                     avTodos.setACL(acl)
                     avTodos.save().then(function (todo) {
                         alert('保存成功')
@@ -157,24 +158,29 @@
                     if(this.currentUser){
                     var query = new AV.Query('AllTodos');
                     query.find().then((todos)=> {
-                            let i = 0
-                            for(i;i<todos.length;i++){
-                                let ii = 0
-                                var todo = JSON.parse(todos[i].attributes.content)
-                                for(ii;ii<todo.length;ii++){
-                                    var date = todo[ii].date
-                                    console.log(this.todo.dates[date+empty-1].todolist);
-                                    
-                                    let todolist = this.todo.dates[date+empty-1].todolist
-                                    todolist.push({
-                                        date: todo[ii].date,
-                                        title: todo[ii].title,
-                                        done: todo[ii].done,
-                                    })
+                        for(let i=0;i<todos.length;i++){
+                            console.log(AV.User.current().attributes.username)
+                            console.log(todos[i].attributes.username)
+                            if(AV.User.current().attributes.username === todos[i].attributes.username){
+                                for(let i=0;i<todos.length;i++){
+                                    var todo = JSON.parse(todos[i].attributes.content)
+                                    for(let ii=0;ii<todo.length;ii++){
+                                        var date = todo[ii].date
+                                        var index =  Number(date)  + empty - 1
+                                        var todolist = this.todo.dates[index].todolist
+                                        this.todo.dates[index].finish = true
+                                        todolist.push({
+                                            date: todo[ii].date,
+                                            title: todo[ii].title,
+                                            done: todo[ii].done,
+                                        })
+                                    }
                                 }
+                                let nowday = new Date().getDate()
+                                this.todo.todolist = this.todo.dates[nowday+empty-1].todolist
                             }
-                            let nowday = new Date().getDate()
-                            this.todo.todolist = this.todo.dates[nowday+empty-1].todolist
+                        }
+
                         }, function(error){
                             console.error(error) 
                         })
