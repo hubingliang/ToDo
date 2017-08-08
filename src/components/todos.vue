@@ -63,7 +63,6 @@
                 todoshow: false,
             }),
             mounted() {
-                this.read()
             },
             created: function(){
                 this.AV()
@@ -80,7 +79,21 @@
                     this.todo.newTodo = ''
                     this.todo.todolist = this.todo.dates[this.todo.index].todolist
                     this.todo.dates[this.todo.index].finish = true
-                    this.saveTodos()
+                    var query = new AV.Query('AllTodos')
+                    query.find().then((todos)=>{
+                        for(let i = 0;i<=todos.length;i++){
+                            if(todos.length===0){
+                                console.log('asd')
+                                this.saveTodos()
+                            }else if(AV.User.current().attributes.username === todos[i].attributes.username ){
+                                this.upDate()
+                            }else{
+                                this.saveTodos() 
+                            }
+                        }
+                    })
+                    
+
                 },
                 removeTodo: function(todo){
                     let index = this.todo.dates[this.todo.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
@@ -88,7 +101,7 @@
                     if(this.todo.todolist.length === 0){
                         this.todo.dates[this.todo.index].finish = false
                     }
-                    this.saveTodos()
+                    this.upDate()
                 },
                 add: function(){
                     this.todo.canadd = !this.todo.canadd
@@ -97,14 +110,11 @@
                     var username = $('#registerUsername').val();
                     var password = $('#registerPassword').val();
                     var email = $('#registerEmail').val();
-                    // LeanCloud - 注册
-                    // https://leancloud.cn/docs/leanstorage_guide-js.html#注册
                     var user = new AV.User();
                     user.setUsername(username);
                     user.setPassword(password);
                     user.setEmail(email);
                     user.signUp().then(function (loginedUser) {
-                        // 注册成功，跳转到商品 list 页面
                     }, (function (error) {
                         alert(JSON.stringify(error));
                     }));
@@ -112,10 +122,8 @@
                 login:function(){
                     var username = $('#signinEmail').val();
                     var password = $('#signinPassword').val();
-                    // LeanCloud - 登录
-                    // https://leancloud.cn/docs/leanstorage_guide-js.html#用户名和密码登录
-                    AV.User.logIn(username, password).then(function (loginedUser) {
-                        alert(`Hello ${username}`)
+                    AV.User.logIn(username, password).then( (loginedUser)=> {
+                        this.read()
                     }, function (error) {
                         if (error.code === 210) {
                             alert('用户名密码不匹配')
@@ -146,21 +154,32 @@
                     avTodos.set('content', dataString)
                     avTodos.set('username', AV.User.current().attributes.username)
                     avTodos.setACL(acl)
-                    avTodos.save().then(function (todo) {
-                        alert('保存成功')
-                    }, function (error) {
-                        alert('保存失败')
-                    });
+                    avTodos.save()
+                },
+                upDate:function(){
+                    var query = new AV.Query('AllTodos')
+                    query.find().then((todos)=>{
+                        for(let i = 0;i<todos.length;i++){
+                            if(AV.User.current().attributes.username === todos[i].attributes.username ){
+                                let dataString = JSON.stringify(this.todo.dates[this.todo.index].todolist)
+                                let id = todos[i].id
+                                let todo = AV.Object.createWithoutData('AllTodos', id);
+                                // 修改属性
+                                todo.set('content', dataString);
+                                // 保存到云端
+                                todo.save();
+                            }
+                        }
+                    })
                 },
                 read:function(){
+                    console.log(AV.User.current())
                     this.currentUser = this.getCurrentUser()
                     let empty = this.todo.empty
                     if(this.currentUser){
                     var query = new AV.Query('AllTodos');
-                    query.find().then((todos)=> {
+                    query.find().then((todos)=> {   
                         for(let i=0;i<todos.length;i++){
-                            console.log(AV.User.current().attributes.username)
-                            console.log(todos[i].attributes.username)
                             if(AV.User.current().attributes.username === todos[i].attributes.username){
                                 for(let i=0;i<todos.length;i++){
                                     var todo = JSON.parse(todos[i].attributes.content)

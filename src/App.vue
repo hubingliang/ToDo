@@ -21,6 +21,7 @@ export default {
           //分割线
           newTodo: '',
           todolist: [],  
+          totalTodoList:[],
           canadd: false,
           day : new Date().getDate(),
           weekday: new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date().getDay()]
