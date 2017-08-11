@@ -36,6 +36,7 @@ export default {
             this.todo.weekday = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(year,month,this.todo.dates[index].date).getDay()]
             this.todo.index = this.todo.day - 1 + this.todo.empty
             this.todo.todolist = this.todo.dates[this.todo.index].todolist
+            console.log(this.todo.todolist.length)
         },
         whichDay: function(){ 
             let date = new Date()

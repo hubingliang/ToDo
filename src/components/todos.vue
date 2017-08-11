@@ -81,16 +81,26 @@
                     this.todo.dates[this.todo.index].finish = true
                     var query = new AV.Query('AllTodos')
                     query.find().then((todos)=>{
-                        for(let i = 0;i<=todos.length;i++){
-                            if(todos.length===0){
-                                console.log('asd')
-                                this.saveTodos()
-                            }else if(AV.User.current().attributes.username === todos[i].attributes.username ){
-                                this.upDate()
-                            }else{
-                                this.saveTodos() 
+                        if(this.todo.todolist.length === 1){
+                            console.log('save22')
+                            console.log(this.todo.todolist.length)
+                            
+                            this.saveTodos() 
+                        }else{
+                            for(let i = 0;i<=todos.length;i++){
+                                if(todos.length===0){
+                                    console.log('save')
+                                    this.saveTodos()
+                                }else if(AV.User.current().attributes.username === todos[i].attributes.username){
+                                    console.log('update')
+                                    this.upDate()
+                                }else{
+                                    console.log('save2')
+                                    this.saveTodos() 
+                                }
                             }
                         }
+
                     })
                     
 
@@ -173,7 +183,6 @@
                     })
                 },
                 read:function(){
-                    console.log(AV.User.current())
                     this.currentUser = this.getCurrentUser()
                     let empty = this.todo.empty
                     if(this.currentUser){
@@ -181,7 +190,6 @@
                     query.find().then((todos)=> {   
                         for(let i=0;i<todos.length;i++){
                             if(AV.User.current().attributes.username === todos[i].attributes.username){
-                                for(let i=0;i<todos.length;i++){
                                     var todo = JSON.parse(todos[i].attributes.content)
                                     for(let ii=0;ii<todo.length;ii++){
                                         var date = todo[ii].date
@@ -194,7 +202,6 @@
                                             done: todo[ii].done,
                                         })
                                     }
-                                }
                                 let nowday = new Date().getDate()
                                 this.todo.todolist = this.todo.dates[nowday+empty-1].todolist
                             }
