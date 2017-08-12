@@ -43,7 +43,7 @@
                     </li>
                     <li v-for="todo in todo.todolist" class="list">
                         <div class="todolist">
-                            <el-checkbox v-model="todo.done"></el-checkbox>
+                            <el-checkbox v-model="todo.done" @click="checkbox()"></el-checkbox>
                             <p v-bind:class="{active:todo.done === true}">{{ todo.title }}</p>
                         </div>
                         <i @click="removeTodo(todo)" class="el-icon-delete"></i>
@@ -69,6 +69,9 @@
             },
             props:['todo'],
             methods: {
+                checkbox:function(){
+                    console.log('check')
+                },
                 addTodo: function(){
                     this.todo.dates[this.todo.index].todolist.push({
                         date: this.todo.day,
