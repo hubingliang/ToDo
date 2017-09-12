@@ -29,7 +29,7 @@
                 <form action="" class="register-form">
                     <input type="text"placeholder="Username"id="signinEmail">
                     <input type="password"placeholder="password"id="signinPassword">
-                    <el-button class="el-signin" v-on:click="login()"  @click="signInshow = !signInshow,todoshow = !todoshow">sign in</el-button>
+                    <el-button class="el-signin" v-on:click="login()">sign in</el-button>
                 </form>
             </div>
             <transition name="el-fade-in">
@@ -50,8 +50,9 @@
                             <i @click="removeTodo(todo)" class="el-icon-delete"></i>
                         </li>
                     </ol>
-                </div>
-                
+                </div>                
+                <svg class="icon" v-on:mouseenter="loginOutshow = true" v-on:mouseleave="loginOutshow = false" @click="loginOut()" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path fill="#ffffff" d="M706.432 195.136c-14.656-9.536-34.56-5.44-44.224 9.408-9.536 14.848-5.376 34.688 9.472 44.288C772.032 314.048 832 424.448 832 544.192c0 193.92-157.504 351.68-351.04 351.68s-351.04-157.76-351.04-351.68c0-119.68 60.032-230.144 160.448-295.296 14.848-9.6 19.072-29.504 9.472-44.352C290.112 189.632 270.336 185.408 255.552 195.072 136.768 272.192 65.856 402.688 65.856 544.192 65.856 773.504 252.032 960 480.96 960S896 773.504 896 544.192C896 402.624 825.152 272.128 706.432 195.136zM480.96 572.16c17.664 0 32-14.656 32-32.832l0-380.8c0-18.112-14.336-32.768-32-32.768s-32 14.656-32 32.768l0 380.8C448.96 557.504 463.232 572.16 480.96 572.16z" /></svg>
+                <span class="loginOut" v-show="loginOutshow">退出登录</span>
             </div>
             </transition>
         </div>
@@ -64,6 +65,7 @@
                 registershow: false,
                 signInshow: false,
                 todoshow: false,
+                loginOutshow: false
             }),
             mounted() {
                 this.currentUser()
@@ -86,23 +88,21 @@
                     var query = new AV.Query('AllTodos')
                     query.find().then((todos)=>{
                         if(this.todo.todolist.length === 1){
-                            console.log('save22')
-                            console.log(this.todo.todolist.length)
                             
                             this.saveTodos() 
                         }else{
-                            for(let i = 0;i<=todos.length;i++){
-                                if(todos.length===0){
-                                    console.log('save')
-                                    this.saveTodos()
-                                }else if(AV.User.current().attributes.username === todos[i].attributes.username){
-                                    console.log('update')
-                                    this.upDate()
-                                }else{
-                                    console.log('save2')
-                                    this.saveTodos() 
+                            if(todos.length === 0){
+                                this.saveTodos() 
+                            }else{
+                                for(let i = 0;i<=todos.length;i++){
+                                    if(AV.User.current().attributes.username === todos[i].attributes.username){
+                                        this.upDate()
+                                    }else{
+                                        this.saveTodos() 
+                                    }
                                 }
                             }
+                            
                         }
 
                     })
@@ -138,6 +138,8 @@
                     var password = $('#signinPassword').val();
                     AV.User.logIn(username, password).then( (loginedUser)=> {
                         this.read()
+                        this.signInshow = false
+                        this.todoshow = true
                     }, function (error) {
                         if (error.code === 210) {
                             alert('用户名密码不匹配')
@@ -159,6 +161,7 @@
                     });
                 },
                 saveTodos:function(){
+                    console.log('save')
                     let dataString = JSON.stringify(this.todo.dates[this.todo.index].todolist)
                     var AVTodos = AV.Object.extend('AllTodos')
                     var avTodos = new AVTodos()
@@ -171,7 +174,7 @@
                     avTodos.save()
                 },
                 upDate:function(){
-                    console.log('ss')
+                    console.log('update')
                     var query = new AV.Query('AllTodos')
                     query.find().then((todos)=>{
                         for(let i = 0;i<todos.length;i++){
@@ -193,10 +196,12 @@
                     let empty = this.todo.empty
                     if(this.currentUser){
                     var query = new AV.Query('AllTodos');
-                    query.find().then((todos)=> {   
+                    query.find().then((todos)=> {  
+                        console.log(todos) 
                         for(let i=0;i<todos.length;i++){
                             if(AV.User.current().attributes.username === todos[i].attributes.username){
                                     var todo = JSON.parse(todos[i].attributes.content)
+                                    console.log(todo)
                                     for(let ii=0;ii<todo.length;ii++){
                                         var date = todo[ii].date
                                         var index =  Number(date)  + empty - 1
@@ -231,6 +236,15 @@
                         //currentUser 为空时，可打开用户注册界面…
                     }
                 },
+                loginOut:function(){
+                    AV.User.logOut();
+                    // 现在的 currentUser 是 null 了
+                    var currentUser = AV.User.current();
+                    this.loginshow = true
+                    this.registershow = false
+                    this.signInshow = false
+                    history.go(0) 
+                }
             }
         }
     </script>
