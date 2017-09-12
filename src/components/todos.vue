@@ -37,18 +37,21 @@
                 <i class="el-icon-plus" v-on:click="add"></i>
                 <p class="day">{{todo.day}}</p>
                 <p class="weekday">{{todo.weekday}}</p>
-                <ol class="todos">
-                    <li>
-                        <input v-model="todo.newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="todo.canadd"></input>
-                    </li>
-                    <li v-for="todo in todo.todolist" class="list">
-                        <div class="todolist">
-                            <el-checkbox v-model="todo.done" @click="checkbox()"></el-checkbox>
-                            <p v-bind:class="{active:todo.done === true}">{{ todo.title }}</p>
-                        </div>
-                        <i @click="removeTodo(todo)" class="el-icon-delete"></i>
-                    </li>
-                </ol>
+                <div class="todos-wrapper">
+                    <ol class="todos">
+                        <li>
+                            <input v-model="todo.newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="todo.canadd"></input>
+                        </li>
+                        <li v-for="todo in todo.todolist" class="list">
+                            <div class="todolist">
+                                <el-checkbox v-model="todo.done" v-on:change="upDate()"></el-checkbox>
+                                <p v-bind:class="{active:todo.done === true}">{{ todo.title }}</p>
+                            </div>
+                            <i @click="removeTodo(todo)" class="el-icon-delete"></i>
+                        </li>
+                    </ol>
+                </div>
+                
             </div>
             </transition>
         </div>
@@ -63,15 +66,13 @@
                 todoshow: false,
             }),
             mounted() {
+                this.currentUser()
             },
             created: function(){
                 this.AV()
             },
             props:['todo'],
             methods: {
-                checkbox:function(){
-                    console.log('check')
-                },
                 addTodo: function(){
                     this.todo.dates[this.todo.index].todolist.push({
                         date: this.todo.day,
@@ -170,11 +171,13 @@
                     avTodos.save()
                 },
                 upDate:function(){
+                    console.log('ss')
                     var query = new AV.Query('AllTodos')
                     query.find().then((todos)=>{
                         for(let i = 0;i<todos.length;i++){
                             if(AV.User.current().attributes.username === todos[i].attributes.username ){
                                 let dataString = JSON.stringify(this.todo.dates[this.todo.index].todolist)
+                                console.log(dataString)
                                 let id = todos[i].id
                                 let todo = AV.Object.createWithoutData('AllTodos', id);
                                 // 修改属性
@@ -214,7 +217,20 @@
                             console.error(error) 
                         })
                     }
-                }
+                },
+                currentUser:function(){
+                    var currentUser = AV.User.current();
+                    if (currentUser) {
+                        this.loginshow = false
+                        this.registershow = false,
+                        this.signInshow = false,
+                        this.todoshow = true
+                        this.read()
+                    }
+                    else {
+                        //currentUser 为空时，可打开用户注册界面…
+                    }
+                },
             }
         }
     </script>

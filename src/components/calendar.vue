@@ -3,13 +3,13 @@
         <i class="el-icon-arrow-left"> {{todo.year}}</i>
         <h4 class="month">{{todo.Cmonth}}</h4>
         <div class="weekday">
-            <div>MO</div>
-            <div>TU</div>
-            <div>WE</div>
-            <div>TH</div>
-            <div>FR</div>
-            <div class="weekend">SA</div>
-            <div class="weekend">SU</div>
+            <div>mo</div>
+            <div>tu</div>
+            <div>we</div>
+            <div>th</div>
+            <div>fr</div>
+            <div class="weekend">sa</div>
+            <div class="weekend">su</div>
         </div>
         <div class="monthday">
             <div v-for="(dates,index) in todo.dates" v-bind:class="{past:dates.past === true,now:dates.now === true}" v-on:click="changeday(index)" ref="menuItem">
