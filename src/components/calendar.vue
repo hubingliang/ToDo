@@ -34,7 +34,6 @@ export default {
     },
     methods:{
         changeDay:function(date){
-            console.log(date)
             if(date === ' '){
                 return //如果点击空白日期则返回
             }else{
@@ -59,7 +58,7 @@ export default {
             for(let i = 1;i < this.app.substitute;i++){
                 this.app.todo.unshift({date:' '})
             }
-            
+            this.app.currentTodo = this.app.todo[this.app.substitute + this.app.day - 2].todolist
         },
     }
 }

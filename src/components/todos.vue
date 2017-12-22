@@ -34,15 +34,15 @@
         </div>
         <transition name="el-fade-in">
         <div class="todo" v-show="todoshow">
-            <i class="el-icon-plus" v-on:click="add"></i>
+            <i class="el-icon-plus" @click="canadd = !canadd"></i>
             <p class="day">{{app.day}}</p>
             <p class="weekday">{{app.weekday}}</p>
             <div class="todos-wrapper">
                 <ol class="todos">
                     <li>
-                        <input v-model="app.newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="app.canadd"></input>
+                        <input v-model="app.newTodo" placeholder="还要做什么？" class="newtodo" @keypress.enter="addTodo" v-if="canadd"></input>
                     </li>
-                    <li v-for="todo in app.todo[app.substitute + app.day - 2].todolist" class="list">
+                    <li v-for="todo in app.currentTodo" class="list">
                         <div class="todolist">
                             <el-checkbox v-model="todo.done" v-on:change="upDate()"></el-checkbox>
                             <p v-bind:class="{active:todo.done === true}">{{ todo.title }}</p>
@@ -67,14 +67,24 @@
             signInshow: false,
             todoshow: false,
             loginOutshow: false,
+            canadd: false,
+            month : new Date().getMonth(),
+            year : new Date().getFullYear(),
+            today : new Date().getDate(),
         }),
+        computed: {
+            index: function () {
+                return this.app.substitute + this.app.day - 2
+            },
+        },
         mounted() {
             this.currentUser()
         },
         props:['app'],
         methods: {
             currentUser:function(){
-                var currentUser = AV.User.current();
+                let currentUser = AV.User.current()
+                this.currentUser = AV.User.current().attributes.username;
                 if (currentUser) {
                     this.loginshow = false
                     this.registershow = false,
@@ -87,14 +97,31 @@
                 }
             },
             addTodo:function(){
-                console.log(this.app.todo[this.app.substitute + this.app.day - 2])
-                this.app.todo[this.app.substitute + this.app.day - 2].todolist.push({
+                this.index = this.app.substitute + this.app.day - 2//初始化index
+                this.app.todo[this.index].todolist.push({
+                    year: this.year,
+                    mouth: this.month,
                     date: this.app.day,
                     title: this.app.newTodo,
                     createdAt: new Date(),
                     done: false,
                 })
-                this.app.newTodo = ''
+                this.app.todo[this.index].finish = true //生成日期下的小点
+                
+                //保存到leanClond
+                let TodoFolder = AV.Object.extend('TodoFolder')
+                // 新建对象
+                let todoFolder = new TodoFolder()
+                // 设置名称
+                todoFolder.set('todoList',this.app.todo[this.index].todolist)
+                // 设置优先级
+                todoFolder.set('user',this.currentUser)
+                todoFolder.save().then(function (todo) {
+                    console.log('objectId is ' + todo.id)
+                }, function (error) {
+                    console.error(error)
+                });
+                this.app.newTodo = '' //清空输入框
             },
             addTodo2: function(){
                 this.app.dates[this.app.index].todolist.push({
@@ -127,19 +154,14 @@
                     }
 
                 })
-                console.log(this.app.dates[this.app.index])
 
             },
             removeTodo: function(todo){
-                let index = this.app.dates[this.app.index].todolist.indexOf(todo) // Array.prototype.indexOf 是 ES 5 新加的 API
-                this.app.dates[this.app.index].todolist.splice(index,1) // 不懂 splice？赶紧看 MDN 文档！
-                if(this.app.todolist.length === 0){
-                    this.app.dates[this.app.index].finish = false
-                }
-                this.upDate()
-            },
-            add: function(){
-                this.app.canadd = !this.app.canadd
+                let index = this.app.todo[this.index].todolist.indexOf(todo) 
+                this.app.todo[this.index].todolist.splice(index,1)
+                if(this.app.todo[this.index].todolist.length === 0){
+                    this.app.todo[this.index].finish = false
+                }       
             },
             register:function(){
                 var username = $('#registerUsername').val();
@@ -186,13 +208,11 @@
                 avTodos.save()
             },
             upDate:function(){
-                console.log('update')
                 var query = new AV.Query('AllTodos')
                 query.find().then((todos)=>{
                     for(let i = 0; i<todos.length;i++){
                         if(AV.User.current().attributes.username === todos[i].attributes.username ){
                             let dataString = JSON.stringify(this.app.dates[this.app.index].todolist)
-                            console.log(dataString)
                             let id = todos[i].id
                             let todo = AV.Object.createWithoutData('AllTodos', id);
                             // 修改属性
@@ -204,30 +224,11 @@
                 })
             },
             read:function(){
-                this.currentUser = this.getCurrentUser()
-                let empty = this.app.empty
+                
+                console.log(this.currentUser)
                 if(this.currentUser){
-                var query = new AV.Query('AllTodos');
+                var query = new AV.Query('TodoFolder');
                 query.find().then((todos)=> {  
-                    for(let i=0;i<todos.length;i++){
-                        if(AV.User.current().attributes.username === todos[i].attributes.username){
-                                var todo = JSON.parse(todos[i].attributes.content)
-                                for(let ii=0;ii<todo.length;ii++){
-                                    var date = todo[ii].date
-                                    var index =  Number(date)  + empty - 1
-                                    var todolist = this.app.dates[index].todolist
-                                    this.app.dates[index].finish = true
-                                    todolist.push({
-                                        date: todo[ii].date,
-                                        title: todo[ii].title,
-                                        done: todo[ii].done,
-                                    })
-                                }
-                            let nowday = new Date().getDate()
-                            this.app.todolist = this.app.dates[nowday+empty-1].todolist
-                        }
-                    }
-
                     }, function(error){
                         console.error(error) 
                     })
