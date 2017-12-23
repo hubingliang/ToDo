@@ -68,7 +68,7 @@
             todoshow: false,
             loginOutshow: false,
             canadd: false,
-            month : new Date().getMonth(),
+            month : new Date().getMonth() + 1,
             year : new Date().getFullYear(),
             today : new Date().getDate(),
         }),
@@ -84,8 +84,8 @@
         methods: {
             currentUser:function(){
                 let currentUser = AV.User.current()
-                this.currentUser = AV.User.current().attributes.username;
                 if (currentUser) {
+                    this.currentUser = AV.User.current().attributes.username
                     this.loginshow = false
                     this.registershow = false,
                     this.signInshow = false,
@@ -98,22 +98,49 @@
             },
             addTodo:function(){
                 this.index = this.app.substitute + this.app.day - 2//初始化index
-                this.app.todo[this.index].todolist.push({
+                let newTodo = {
                     year: this.year,
                     mouth: this.month,
                     date: this.app.day,
                     title: this.app.newTodo,
                     createdAt: new Date(),
                     done: false,
+                }
+                this.app.todo[this.index].todoList.push(newTodo)
+                this.app.userTodo.push(this.app.todo[this.index])
+                this.app.todo[this.index].finish = false //生成日期下的小点
+                this.upDate()
+                this.app.currentTodo = this.app.todo[this.app.substitute + this.today - 2].todoList
+            },
+            upDate:function(){
+                var query = new AV.Query('TodoFolder');
+                query.find().then((todos)=> {  
+                    console.log(todos)
+                    for(let i = 0;i<todos.length;i++){
+                        if(todos[i].attributes.user === this.currentUser){
+                            let TodoFolder = AV.Object.createWithoutData('TodoFolder', todos[i].id)
+                            // 修改属性
+                            TodoFolder.set('todo', this.app.userTodo)
+                            // 保存到云端
+                            TodoFolder.save()
+                            console.log('update')
+                            return
+                        }
+                    }
+                    this.save()
+                }, function(error){
+                    console.error(error) 
                 })
-                this.app.todo[this.index].finish = true //生成日期下的小点
-                
-                //保存到leanClond
+                this.app.newTodo = '' //清空输入框
+            },
+            save:function(){
+                console.log('save')
+                  //保存到leanClond
                 let TodoFolder = AV.Object.extend('TodoFolder')
                 // 新建对象
                 let todoFolder = new TodoFolder()
                 // 设置名称
-                todoFolder.set('todoList',this.app.todo[this.index].todolist)
+                todoFolder.set('todo',this.app.userTodo)
                 // 设置优先级
                 todoFolder.set('user',this.currentUser)
                 todoFolder.save().then(function (todo) {
@@ -123,45 +150,38 @@
                 });
                 this.app.newTodo = '' //清空输入框
             },
-            addTodo2: function(){
-                this.app.dates[this.app.index].todolist.push({
-                    date: this.app.day,
-                    title: this.app.newTodo,
-                    createdAt: new Date(),
-                    done: false,
-                })
-                this.app.newTodo = ''
-                this.app.todolist = this.app.dates[this.app.index].todolist
-                this.app.dates[this.app.index].finish = true
-                var query = new AV.Query('AllTodos')
-                query.find().then((todos)=>{
-                    if(this.app.todolist.length === 1){
-                        
-                        this.saveTodos() 
-                    }else{
-                        if(todos.length === 0){
-                            this.saveTodos() 
-                        }else{
-                            for(let i = 0;i<=todos.length;i++){
-                                if(AV.User.current().attributes.username === todos[i].attributes.username){
-                                    this.upDate()
-                                }else{
-                                    this.saveTodos() 
-                                }
+            read:function(){
+                if(this.currentUser){
+                    var query = new AV.Query('TodoFolder');
+                    query.find().then((todos)=> { 
+                        for(let i = 0;i<todos.length;i++){
+                            if(todos[i].attributes.user === this.currentUser){
+                                this.app.userTodo = todos[i].attributes.todo
+                                this.distribute(this.app.userTodo)
                             }
                         }
-                        
+                    }, function(error){
+                        console.error(error) 
+                    })
+                }
+            },
+            distribute: function(todos){
+                for(let i = 0;i < todos.length; i++){
+                    if(todos[i].todoList[0].year === this.year && todos[i].todoList[0].mouth === this.month){
+                        this.app.todo[this.app.substitute + todos[i].todoList[0].date - 2].todoList = todos[i].todoList
                     }
-
-                })
-
+                }
+                
+                this.app.currentTodo = this.app.todo[this.app.substitute + this.today - 2].todoList
+                console.log(this.app.todo[this.app.substitute + this.today - 2])
             },
             removeTodo: function(todo){
-                let index = this.app.todo[this.index].todolist.indexOf(todo) 
-                this.app.todo[this.index].todolist.splice(index,1)
-                if(this.app.todo[this.index].todolist.length === 0){
+                let index = this.app.todo[this.index].todoList.indexOf(todo) 
+                this.app.todo[this.index].todoList.splice(index,1)
+                if(this.app.todo[this.index].todoList.length === 0){
                     this.app.todo[this.index].finish = false
-                }       
+                }
+
             },
             register:function(){
                 var username = $('#registerUsername').val();
@@ -206,33 +226,6 @@
                 avTodos.set('username', AV.User.current().attributes.username)
                 avTodos.setACL(acl)
                 avTodos.save()
-            },
-            upDate:function(){
-                var query = new AV.Query('AllTodos')
-                query.find().then((todos)=>{
-                    for(let i = 0; i<todos.length;i++){
-                        if(AV.User.current().attributes.username === todos[i].attributes.username ){
-                            let dataString = JSON.stringify(this.app.dates[this.app.index].todolist)
-                            let id = todos[i].id
-                            let todo = AV.Object.createWithoutData('AllTodos', id);
-                            // 修改属性
-                            todo.set('content', dataString);
-                            // 保存到云端
-                            todo.save();
-                        }
-                    }
-                })
-            },
-            read:function(){
-                
-                console.log(this.currentUser)
-                if(this.currentUser){
-                var query = new AV.Query('TodoFolder');
-                query.find().then((todos)=> {  
-                    }, function(error){
-                        console.error(error) 
-                    })
-                }
             },
             loginOut:function(){
                 AV.User.logOut();

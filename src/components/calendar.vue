@@ -14,7 +14,7 @@
         <div class="monthday">
             <div v-for="(dates,index) in app.todo" v-bind:class="{past:dates.past === true,now:dates.now === true}" v-on:click="changeDay(dates.date)" ref="menuItem">
                 <p>{{ dates.date }}</p>
-                <div class="circular" v-if="dates.finish"></div>
+                <div class="circular" v-if="!dates.finish"></div>
             </div>
         </div>
     </div>
@@ -39,6 +39,7 @@ export default {
             }else{
                 this.app.weekday = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(this.year,this.month,date).getDay()]
                 this.app.day = Number(date)
+                this.app.currentTodo = this.app.todo[this.app.substitute + this.app.day - 2].todoList
             }
         },
         resetDate: function(){
@@ -46,17 +47,17 @@ export default {
             let totalDays = new Date(this.year,this.month,0).getDate()
             for(let i = 1;i <= totalDays;i++){
                 if(i < this.today){
-                    this.app.todo.push({date: `${i}`,past:true,todolist:[],finish:false})
+                    this.app.todo.push({date: `${i}`,past:true,todoList:[],finish:true})
                 }else if(i === this.today){
-                    this.app.todo.push({date: `${i}`,now:true,todolist:[],finish:false})
+                    this.app.todo.push({date: `${i}`,now:true,todoList:[],finish:true})
                 }else{
-                    this.app.todo.push({date: `${i}`,past:false,todolist:[],finish:false})
+                    this.app.todo.push({date: `${i}`,past:false,todoList:[],finish:true})
                 }
             }
             //用空白填充没日期的日历
             this.app.substitute = new Date(this.year,this.month,1).getDay()
             for(let i = 1;i < this.app.substitute;i++){
-                this.app.todo.unshift({date:' '})
+                this.app.todo.unshift({date:' ',finish:true})
             }
             this.app.currentTodo = this.app.todo[this.app.substitute + this.app.day - 2].todolist
         },
