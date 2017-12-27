@@ -23,7 +23,7 @@
 <script>
 export default {
     data: () => ({
-        month : new Date().getMonth(),
+        month : new Date().getMonth() + 1,
         year : new Date().getFullYear(),
         today : new Date().getDate(),
         currentMonth: new Array("J a n u a r y", "F e b r u a r y", "M a r c h","A p r i l", "M a y", "J u n e", "J u l y", "A u g u s t", "S e p t e m b e r", "O c t o b e r", "N o v e m b e r", "D e c e m b e r")[new Date().getMonth()]
@@ -47,11 +47,11 @@ export default {
             let totalDays = new Date(this.year,this.month,0).getDate()
             for(let i = 1;i <= totalDays;i++){
                 if(i < this.today){
-                    this.app.todo.push({date: `${i}`,past:true,todoList:[],finish:true})
+                    this.app.todo.push({year: `${this.year}`,month: `${this.month}`,date: `${i}`,past:true,finish:true,todoList:[]})
                 }else if(i === this.today){
-                    this.app.todo.push({date: `${i}`,now:true,todoList:[],finish:true})
+                    this.app.todo.push({year: `${this.year}`,month: `${this.month}`,date: `${i}`,now:true,finish:true,todoList:[]})
                 }else{
-                    this.app.todo.push({date: `${i}`,past:false,todoList:[],finish:true})
+                    this.app.todo.push({year: `${this.year}`,month: `${this.month}`,date: `${i}`,past:false,finish:true,todoList:[]})
                 }
             }
             //用空白填充没日期的日历

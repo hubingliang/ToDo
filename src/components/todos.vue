@@ -107,21 +107,31 @@
                     done: false,
                 }
                 this.app.todo[this.index].todoList.push(newTodo)
+                for(let i = 0;i<this.app.userTodo.length ;i++){
+                    if(Number(this.app.userTodo[i].date) === newTodo.date){
+                        this.app.userTodo[i].todoList.push(newTodo)
+                        this.app.todo[this.index].finish = false //生成日期下的小点
+                        this.upDate()
+                        this.app.currentTodo = this.app.todo[this.index].todoList//在当前列表中加入newYodo
+                        return
+                    }
+                }
                 this.app.userTodo.push(this.app.todo[this.index])
                 this.app.todo[this.index].finish = false //生成日期下的小点
                 this.upDate()
-                this.app.currentTodo = this.app.todo[this.app.substitute + this.today - 2].todoList
+                this.app.currentTodo = this.app.todo[this.index].todoList//在当前列表中加入newYodo
             },
             upDate:function(){
                 var query = new AV.Query('TodoFolder');
                 query.find().then((todos)=> {  
-                    console.log(todos)
                     for(let i = 0;i<todos.length;i++){
                         if(todos[i].attributes.user === this.currentUser){
+                            console.log('s')
                             let TodoFolder = AV.Object.createWithoutData('TodoFolder', todos[i].id)
                             // 修改属性
                             TodoFolder.set('todo', this.app.userTodo)
                             // 保存到云端
+                            console.log(this.app.userTodo)
                             TodoFolder.save()
                             console.log('update')
                             return
@@ -167,20 +177,23 @@
             },
             distribute: function(todos){
                 for(let i = 0;i < todos.length; i++){
-                    if(todos[i].todoList[0].year === this.year && todos[i].todoList[0].mouth === this.month){
+                    if(Number(todos[i].year) == this.year && Number(todos[i].month) === this.month){
+                        console.log(todos)
+                        this.app.todo[this.app.substitute + todos[i].todoList[0].date - 2].finish = todos[i].finish
                         this.app.todo[this.app.substitute + todos[i].todoList[0].date - 2].todoList = todos[i].todoList
                     }
-                }
-                
+                }      
                 this.app.currentTodo = this.app.todo[this.app.substitute + this.today - 2].todoList
-                console.log(this.app.todo[this.app.substitute + this.today - 2])
             },
             removeTodo: function(todo){
+                console.log(this.app.userTodo)
                 let index = this.app.todo[this.index].todoList.indexOf(todo) 
                 this.app.todo[this.index].todoList.splice(index,1)
                 if(this.app.todo[this.index].todoList.length === 0){
-                    this.app.todo[this.index].finish = false
+                    this.app.todo[this.index].finish = true
                 }
+
+                this.upDate()
 
             },
             register:function(){
