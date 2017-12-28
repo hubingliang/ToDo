@@ -107,31 +107,33 @@
                     done: false,
                 }
                 this.app.todo[this.index].todoList.push(newTodo)
+                this.app.todo[this.index].finish = false //生成日期下的小点
+                
+                this.upDate()
+                this.app.currentTodo = this.app.todo[this.index].todoList//在当前列表中加入newYodo
+                
                 for(let i = 0;i<this.app.userTodo.length ;i++){
                     if(Number(this.app.userTodo[i].date) === newTodo.date){
-                        this.app.userTodo[i].todoList.push(newTodo)
-                        this.app.todo[this.index].finish = false //生成日期下的小点
-                        this.upDate()
-                        this.app.currentTodo = this.app.todo[this.index].todoList//在当前列表中加入newYodo
-                        return
+                        //this.app.userTodo[i].todoList.push(newTodo)
+                        if(this.app.userTodo[i].todoList.length === 0){
+                           this.app.userTodo[i].todoList.push(newTodo) 
+                        }
+                        return   
                     }
                 }
                 this.app.userTodo.push(this.app.todo[this.index])
-                this.app.todo[this.index].finish = false //生成日期下的小点
-                this.upDate()
-                this.app.currentTodo = this.app.todo[this.index].todoList//在当前列表中加入newYodo
+                
+                
             },
             upDate:function(){
                 var query = new AV.Query('TodoFolder');
                 query.find().then((todos)=> {  
                     for(let i = 0;i<todos.length;i++){
                         if(todos[i].attributes.user === this.currentUser){
-                            console.log('s')
                             let TodoFolder = AV.Object.createWithoutData('TodoFolder', todos[i].id)
                             // 修改属性
                             TodoFolder.set('todo', this.app.userTodo)
                             // 保存到云端
-                            console.log(this.app.userTodo)
                             TodoFolder.save()
                             console.log('update')
                             return
@@ -176,9 +178,10 @@
                 }
             },
             distribute: function(todos){
+                
                 for(let i = 0;i < todos.length; i++){
-                    if(Number(todos[i].year) == this.year && Number(todos[i].month) === this.month){
-                        console.log(todos)
+                    console.log('todos: ', todos);
+                    if(Number(todos[i].year) === this.year && Number(todos[i].month) === this.month && todos[i].todoList.length > 0){
                         this.app.todo[this.app.substitute + todos[i].todoList[0].date - 2].finish = todos[i].finish
                         this.app.todo[this.app.substitute + todos[i].todoList[0].date - 2].todoList = todos[i].todoList
                     }
@@ -186,7 +189,6 @@
                 this.app.currentTodo = this.app.todo[this.app.substitute + this.today - 2].todoList
             },
             removeTodo: function(todo){
-                console.log(this.app.userTodo)
                 let index = this.app.todo[this.index].todoList.indexOf(todo) 
                 this.app.todo[this.index].todoList.splice(index,1)
                 if(this.app.todo[this.index].todoList.length === 0){
@@ -227,18 +229,6 @@
             getCurrentUser: function () {
                 let {id, createdAt, attributes: {username}} = AV.User.current()
                 return {id, username, createdAt}
-            },
-            saveTodos:function(){
-                let dataString = JSON.stringify(this.app.dates[this.app.index].todolist)
-                let AVTodos = AV.Object.extend('AllTodos')
-                let avTodos = new AVTodos()
-                let acl = new AV.ACL()
-                acl.setReadAccess(AV.User.current(),true)
-                acl.setWriteAccess(AV.User.current(),true)
-                avTodos.set('content', dataString)
-                avTodos.set('username', AV.User.current().attributes.username)
-                avTodos.setACL(acl)
-                avTodos.save()
             },
             loginOut:function(){
                 AV.User.logOut();

@@ -60,6 +60,7 @@ export default {
                 this.app.todo.unshift({date:' ',finish:true})
             }
             this.app.currentTodo = this.app.todo[this.app.substitute + this.app.day - 2].todolist
+            this.app.weekday = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(this.year,this.month,this.today).getDay()]
         },
     }
 }
