@@ -4,7 +4,7 @@
             <div class="bg-grey-triangle"></div>
         </div>
         <div class="bg-white">
-
+            s
         </div>
     </div>
 </template>
