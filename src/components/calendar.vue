@@ -43,6 +43,7 @@ export default {
             }
         },
         resetDate: function(){
+            
             //生成有日期的日历
             let totalDays = new Date(this.year,this.month,0).getDate()
             for(let i = 1;i <= totalDays;i++){
@@ -55,9 +56,9 @@ export default {
                 }
             }
             //用空白填充没日期的日历
-            this.app.substitute = new Date(this.year,this.month,1).getDay()
+            this.app.substitute = new Date(this.year,this.month - 1,1).getDay()
             for(let i = 1;i < this.app.substitute;i++){
-                this.app.todo.unshift({date:' ',finish:true})
+                this.app.todo.unshift({date:' ',year: `${this.year}`,month: `${this.month}`,finish:true,todoList:[]})
             }
             this.app.currentTodo = this.app.todo[this.app.substitute + this.app.day - 2].todolist
             this.app.weekday = new Array("S u n d a y", "M o n d a y", "T u e s d a y", "W e d n e s d a y", "T h u r s d a y", "F r i d a y", "S a t u r d a y")[new Date(this.year,this.month,this.today).getDay()]

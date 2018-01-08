@@ -1,9 +1,9 @@
 <template>
-    <div id="app">
+  <div id="app">
       <background />
       <calendar v-bind:app="app"/>
-      <todos v-bind:app="app"/>
-    </div>
+      <router-view v-bind:app="app"></router-view>
+  </div>
 </template>
 
 <script>
@@ -35,6 +35,16 @@ export default {
             appId: APP_ID,
             appKey: APP_KEY
         });
+    },
+    currentUser:function(){
+      let currentUser = AV.User.current()
+      if (currentUser) {
+          this.currentUser = AV.User.current().attributes.username
+          this.read()
+      }
+      else {
+          //currentUser 为空时，可打开用户注册界面…
+      }
     },
   },
   name: 'app',
