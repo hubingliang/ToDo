@@ -16,7 +16,6 @@
 
 <script>
 export default {
-  props:['show'],
   methods:{
     login:function(){
         var username = $('#signinEmail').val();
